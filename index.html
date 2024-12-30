@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How To Earn Digitally</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000; /* Black background for focus on video */
+        }
+
+        .video-container {
+            position: relative;
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 15px 30px;
+            font-size: 18px;
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .play-button:hover {
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #000;
+        }
+
+        video {
+            pointer-events: none;
+            width: 100%;
+            height: auto;
+            outline: none;
+        }
+
+        video::-webkit-media-controls {
+            display: none !important;
+        }
+
+        video::-moz-media-controls {
+            display: none !important;
+        }
+
+        video::-ms-media-controls {
+            display: none !important;
+        }
+
+        video::media-controls {
+            display: none !important;
+        }
+
+        video::-internal-media-controls-overlay-cast-button {
+            display: none !important;
+        }
+
+        video::-internal-media-controls {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <!-- Video element without any visible controls -->
+        <video 
+            id="video" 
+            preload="metadata" 
+            src="video.mp4" 
+            disablepictureinpicture 
+            controls="false" 
+            style="display: block;">
+        </video>
+
+        <!-- Overlay play button -->
+        <button id="playButton" class="play-button">JOIN SESSION</button>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const playButton = document.getElementById('playButton');
+
+        playButton.addEventListener('click', () => {
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            } else if (video.webkitRequestFullscreen) {
+                video.webkitRequestFullscreen();
+            } else if (video.msRequestFullscreen) {
+                video.msRequestFullscreen();
+            }
+
+            video.style.pointerEvents = 'auto';
+            video.play();
+            playButton.style.display = 'none';
+        });
+
+        video.addEventListener('pause', () => {
+            video.play();
+        });
+
+        let lastTime = 0;
+        video.addEventListener('timeupdate', () => {
+            const currentTime = video.currentTime;
+            if (currentTime > lastTime + 0.5 || currentTime < lastTime - 0.5) {
+                video.currentTime = lastTime;
+            } else {
+                lastTime = currentTime;
+            }
+        });
+
+        video.addEventListener('ended', () => {
+            window.close();
+        });
+
+        function ensureFullscreen() {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+                if (video.requestFullscreen) {
+                    video.requestFullscreen();
+                } else if (video.webkitRequestFullscreen) {
+                    video.webkitRequestFullscreen();
+                } else if (video.msRequestFullscreen) {
+                    video.msRequestFullscreen();
+                }
+            }
+        }
+
+        document.addEventListener('fullscreenchange', ensureFullscreen);
+        document.addEventListener('webkitfullscreenchange', ensureFullscreen);
+        document.addEventListener('msfullscreenchange', ensureFullscreen);
+
+        video.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                ensureFullscreen();
+            }
+        });
+    </script>
+</body>
+</html>
